@@ -11,4 +11,5 @@ urlpatterns = [
     path("aceptar/<int:conexion_id>/", views.aceptar_solicitud, name="aceptar_solicitud"),
     path("rechazar/<int:conexion_id>/", views.rechazar_solicitud, name="rechazar_solicitud"),
     path("cv/<int:user_id>/", views.descargar_cv, name="descargar_cv"),
+    path("eliminar/<str:tipo>/<int:id>/", views.eliminar_item, name="eliminar_item"),
 ]

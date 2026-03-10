@@ -266,3 +266,23 @@ def rechazar_solicitud(request, conexion_id):
     conexion.save()
     return redirect("usuariolista")
 
+@login_required
+def eliminar_item(request, tipo, id):
+
+    usuario = request.user
+
+    modelos = {
+        "habilidad": Habilidad,
+        "servicio": Servicio,
+        "experiencia": Experiencia,
+        "educacion": Educacion,
+    }
+
+    modelo = modelos.get(tipo)
+
+    if modelo:
+        item = get_object_or_404(modelo, id=id, usuario=usuario)
+        item.delete()
+        messages.success(request, f"{tipo.capitalize()} eliminada")
+
+    return redirect("profile")
