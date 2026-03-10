@@ -1,0 +1,159 @@
+<html>
+<head>
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f3f6f8;
+    color:#333;
+}
+
+.container{
+    width:700px;
+    margin:auto;
+    background:white;
+    padding:30px;
+}
+
+/* HEADER */
+
+.header{
+    background:#0a66c2;
+    color:white;
+    padding:25px;
+    border-radius:6px;
+}
+
+.titulo{
+    font-size:26px;
+    font-weight:bold;
+}
+
+.nombre{
+    font-size:22px;
+    margin-top:5px;
+    font-weight:bold;
+}
+
+.email{
+    margin-top:4px;
+    font-size:14px;
+}
+
+/* SECTIONS */
+
+.section{
+    margin-top:25px;
+}
+
+.section h3{
+    color:#0a66c2;
+    font-size:18px;
+    border-bottom:2px solid #e5e7eb;
+    padding-bottom:6px;
+}
+
+/* LIST */
+
+.lista{
+    margin-top:12px;
+}
+
+/* CARDS */
+
+.card{
+    border:1px solid #e4e4e4;
+    border-left:4px solid #0a66c2;
+    padding:10px;
+    margin-top:8px;
+    background:#fafafa;
+}
+
+/* HABILIDADES */
+
+.skill{
+    display:inline-block;
+    background:#e7f3ff;
+    color:#0a66c2;
+    padding:4px 10px;
+    margin:4px 4px 0 0;
+    font-size:12px;
+    border-radius:12px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+<div class="titulo">Curriculum Vitae</div>
+<div class="nombre">{{ usuario.first_name }} {{ usuario.last_name }}</div>
+<div class="email">{{ usuario.email }}</div>
+</div>
+
+
+<!-- SERVICIOS -->
+<div class="section">
+<h3>Servicios</h3>
+
+<div class="lista">
+{% for s in servicios %}
+<div class="card">{{ s.nombre }}</div>
+{% endfor %}
+</div>
+
+</div>
+
+
+<!-- HABILIDADES -->
+<div class="section">
+<h3>Habilidades</h3>
+
+<div class="lista">
+{% for h in habilidades %}
+<span class="skill">{{ h.nombre }}</span>
+{% endfor %}
+</div>
+
+</div>
+
+
+<!-- EXPERIENCIA -->
+<div class="section">
+<h3>Experiencia</h3>
+
+<div class="lista">
+{% for e in experiencias %}
+<div class="card">
+<strong>{{ e.cargo }}</strong><br>
+<span style="color:#666;">{{ e.empresa }}</span>
+</div>
+{% endfor %}
+</div>
+
+</div>
+
+
+<!-- EDUCACION -->
+<div class="section">
+<h3>Educación</h3>
+
+<div class="lista">
+{% for edu in educaciones %}
+<div class="card">
+<strong>{{ edu.titulo }}</strong><br>
+<span style="color:#666;">{{ edu.institucion }}</span>
+</div>
+{% endfor %}
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

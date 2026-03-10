@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Mi App</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+<!-- Navbar -->
+{% include "components/navbar.html" %}
+
+<!-- Contenido -->
+<main class="flex-1 container mx-auto p-6">
+
+{% block content %}
+
+{% endblock %}
+
+</main>
+
+<!-- Footer -->
+{% include "components/footer.html" %}
+
+</body>
+</html>

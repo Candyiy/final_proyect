@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ofertas de Trabajo</title>
+</head>
+
+<body>
+
+<h1>Ofertas Disponibles</h1>
+
+{% for oferta in ofertas %}
+
+<div style="border:1px solid gray; padding:10px; margin:10px">
+
+<h2>{{ oferta.cargo }}</h2>
+
+<p><b>Empresa:</b> {{ oferta.empresa }}</p>
+<p><b>Ubicación:</b> {{ oferta.ubicacion }}</p>
+<p><b>Tipo:</b> {{ oferta.get_tipo_empleo_display }}</p>
+
+<p>{{ oferta.descripcion }}</p>
+
+<p><b>Aptitudes:</b> {{ oferta.aptitudes }}</p>
+
+<p><b>Enviar CV a:</b> {{ oferta.metodo_solicitud }}</p>
+
+</div>
+
+{% endfor %}
+
+</body>
+</html>
