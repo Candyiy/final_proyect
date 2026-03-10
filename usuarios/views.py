@@ -211,7 +211,6 @@ from django.shortcuts import get_object_or_404
 
 @login_required
 def descargar_cv(request, user_id):
-
     usuario = get_object_or_404(Usuario, id=user_id)
 
     habilidades = Habilidad.objects.filter(usuario=usuario)
@@ -230,11 +229,11 @@ def descargar_cv(request, user_id):
     }
 
     html = template.render(context)
-
     response = HttpResponse(content_type="application/pdf")
 
     nombre = f"{usuario.first_name}_{usuario.last_name}".replace(" ", "_")
-    response["Content-Disposition"] = f'attachment; filename="CV_{nombre}.pdf"'
+    # Cambiado attachment → inline
+    response["Content-Disposition"] = f'inline; filename="CV_{nombre}.pdf"'
 
     pisa.CreatePDF(html, dest=response)
 
