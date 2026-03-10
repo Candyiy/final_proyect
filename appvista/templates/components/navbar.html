@@ -7,13 +7,14 @@
     </div>
 
     <!-- Buscador centrado y más compacto -->
-    <div class="flex-1 max-w-md">
+    <form method="GET" action="{% url 'buscar_ofertas' %}" class="flex-1 max-w-md">
       <input 
         type="text" 
-        placeholder="Buscar..." 
+        name="q"
+        placeholder="Buscar ofertas..." 
         class="w-full px-3 py-2 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
       >
-    </div>
+    </form>
 
     <!-- Menú de navegación -->
     <ul class="flex gap-6">
@@ -47,16 +48,13 @@
             Ver mi perfil
           </a>
 
-          <a href="#" class="block px-4 py-2 hover:bg-gray-200">
-            Editar perfil
-          </a>
 
-          <a href="#" class="block px-4 py-2 hover:bg-gray-200">
+          <a href="/mis-postulaciones/" class="block px-4 py-2 hover:bg-gray-200">
             Mis postulaciones
           </a>
 
           {% if user.tipo_usuario == "empresa" %}
-          <a href="#" class="block px-4 py-2 hover:bg-gray-200">
+          <a href="{% url 'crear_oferta' %}" class="block px-4 py-2 hover:bg-gray-200">
             Publicar empleo
           </a>
           {% endif %}

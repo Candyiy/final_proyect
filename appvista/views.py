@@ -11,6 +11,44 @@ from job.models import OfertaLaboral, Postulacion, Mensaje
 from .forms import EducacionForm
 
 @login_required
+def mis_postulaciones(request):
+    postulaciones = Postulacion.objects.filter(usuario=request.user).select_related('oferta', 'oferta__usuario').order_by('-fecha')
+    
+    # Contar postulaciones por estado
+    aceptadas_count = postulaciones.filter(status='aceptado').count()
+    pendientes_count = postulaciones.filter(status='pendiente').count()
+    rechazadas_count = postulaciones.filter(status='rechazado').count()
+    
+    context = {
+        'postulaciones': postulaciones,
+        'aceptadas_count': aceptadas_count,
+        'pendientes_count': pendientes_count,
+        'rechazadas_count': rechazadas_count,
+    }
+    return render(request, "pages/mis_postulaciones.html", context)
+
+@login_required
+def buscar_ofertas(request):
+    query = request.GET.get('q', '').strip()
+    ofertas = OfertaLaboral.objects.filter(activa=True).select_related('usuario').order_by('-fecha_publicacion')
+    
+    if query:
+        # Buscar en todos los campos de la oferta laboral
+        ofertas = ofertas.filter(
+            Q(cargo__icontains=query) |
+            Q(empresa__icontains=query) |
+            Q(descripcion__icontains=query) |
+            Q(aptitudes__icontains=query) |
+            Q(ubicacion__icontains=query)
+        )
+    
+    context = {
+        'ofertas': ofertas,
+        'query': query
+    }
+    return render(request, "pages/resultados_busqueda.html", context)
+
+@login_required
 def home(request):
     ofertas = OfertaLaboral.objects.filter(activa=True).order_by('-fecha_publicacion')
     return render(request, "pages/home.html", {'ofertas': ofertas})

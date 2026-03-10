@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- Encabezado -->
+        <div class="mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Mis Postulaciones</h1>
+            <p class="text-lg text-gray-600">Visualiza el estado de todas tus postulaciones</p>
+            <div class="mt-4 h-1 w-24 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full"></div>
+        </div>
+
+        <!-- Estadísticas -->
+        {% if postulaciones %}
+            {% with aceptadas=postulaciones|dictsort:"status"|length resto=postulaciones|length %}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Total postulaciones -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Total de Postulaciones</p>
+                            <p class="text-3xl font-bold text-blue-600">{{ postulaciones|length }}</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 1 1 0 000 2H3a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V6a1 1 0 00-1-1h3a1 1 0 000-2h-2.5A2.5 2.5 0 0016 4.5h-2a2 2 0 00-2 2V5zM5 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H6a1 1 0 01-1-1v-5zm8-1a1 1 0 000 2h2a1 1 0 100-2h-2z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aceptadas -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Aceptadas</p>
+                            <p class="text-3xl font-bold text-green-600">
+                                {% with aceptadas_count=postulaciones|dictsort:"status"|length %}
+                                    0
+                                {% endwith %}
+                            </p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pendientes -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Pendientes</p>
+                            <p class="text-3xl font-bold text-yellow-600">
+                                {% with pending=postulaciones|dictsort:"status" %}
+                                    0
+                                {% endwith %}
+                            </p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <svg class="w-8 h-8 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endwith %}
+            {% endif %}
+
+        <!-- Lista de postulaciones -->
+        {% if postulaciones %}
+            <div class="space-y-6">
+                {% for postulacion in postulaciones %}
+                    <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                        <!-- Encabezado de la tarjeta -->
+                        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white">{{ postulacion.oferta.cargo }}</h3>
+                                    <p class="text-blue-100 text-sm">{{ postulacion.oferta.empresa }}</p>
+                                </div>
+                                <!-- Badge de estado -->
+                                {% if postulacion.status == 'aceptado' %}
+                                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-800 font-semibold">
+                                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Aceptada
+                                    </span>
+                                {% elif postulacion.status == 'rechazado' %}
+                                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-red-100 text-red-800 font-semibold">
+                                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Rechazada
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-yellow-100 text-yellow-800 font-semibold">
+                                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.5a1 1 0 002 0V7z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Pendiente
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Contenido de la tarjeta -->
+                        <div class="px-6 py-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <!-- Información de ubicación y tipo -->
+                                <div class="space-y-4">
+                                    <div class="flex items-start">
+                                        <svg class="w-5 h-5 text-gray-400 mr-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <div>
+                                            <p class="text-gray-600 text-sm">Ubicación</p>
+                                            <p class="text-gray-900 font-semibold">{{ postulacion.oferta.ubicacion }}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-start">
+                                        <svg class="w-5 h-5 text-gray-400 mr-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path>
+                                            <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0015.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z"></path>
+                                        </svg>
+                                        <div>
+                                            <p class="text-gray-600 text-sm">Tipo de Empleo</p>
+                                            <p class="text-gray-900 font-semibold">{{ postulacion.oferta.get_tipo_empleo_display }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Información de fechas -->
+                                <div class="space-y-4">
+                                    <div class="flex items-start">
+                                        <svg class="w-5 h-5 text-gray-400 mr-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a2 2 0 002 2h8a2 2 0 002-2H6z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <div>
+                                            <p class="text-gray-600 text-sm">Fecha de Postulación</p>
+                                            <p class="text-gray-900 font-semibold">{{ postulacion.fecha|date:"d/m/Y" }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start">
+                                        <svg class="w-5 h-5 text-gray-400 mr-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10.5 1.5H5.75A2.25 2.25 0 003.5 3.75v12.5A2.25 2.25 0 005.75 18.5h8.5a2.25 2.25 0 002.25-2.25V6.5m-11-2h8m0 10H5.5"></path>
+                                        </svg>
+                                        <div>
+                                            <p class="text-gray-600 text-sm">Publicada por</p>
+                                            <p class="text-gray-900 font-semibold">
+                                                {% if postulacion.oferta.usuario %}
+                                                    {{ postulacion.oferta.usuario.get_full_name|default:postulacion.oferta.usuario.username }}
+                                                {% else %}
+                                                    Usuario desconocido
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Descripción resumida -->
+                            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                                <p class="text-gray-700 text-sm line-clamp-2">{{ postulacion.oferta.descripcion }}</p>
+                            </div>
+
+                            <!-- Botones de acción -->
+                            <div class="flex gap-3 flex-wrap">
+                                <a href="{% url 'home' %}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.5 1.5H5.75A2.25 2.25 0 003.5 3.75v12.5A2.25 2.25 0 005.75 18.5h8.5a2.25 2.25 0 002.25-2.25V6.5m-11-2h8m0 10H5.5"></path>
+                                    </svg>
+                                    Ver más ofertas
+                                </a>
+                                
+                                {% if postulacion.status == 'aceptado' %}
+                                    <a href="{% url 'mensajes' %}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
+                                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5z"></path>
+                                            <path d="M2 5h16v.5l-8 5-8-5V5z" opacity="0.5"></path>
+                                        </svg>
+                                        Ver mensajes
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Estado vacío -->
+            <div class="bg-white rounded-lg shadow-lg p-12 text-center">
+                <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Aún no has hecho postulaciones</h2>
+                <p class="text-gray-600 mb-6">Explora las ofertas disponibles y empieza a postularte para las que te interesen.</p>
+                
+                <a href="{% url 'home' %}" class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold rounded-lg hover:shadow-lg transition">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.5 1.5H5.75A2.25 2.25 0 003.5 3.75v12.5A2.25 2.25 0 005.75 18.5h8.5a2.25 2.25 0 002.25-2.25V6.5m-11-2h8m0 10H5.5"></path>
+                    </svg>
+                    Explorar ofertas de trabajo
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}
