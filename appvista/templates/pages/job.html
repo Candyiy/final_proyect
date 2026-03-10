@@ -67,10 +67,23 @@
                     📅 {{ oferta.fecha_inicio|date:"d M Y" }} — {{ oferta.fecha_fin|date:"d M Y" }}
                 </div>
 
-                <a href="{% url 'lista_postulantes' %}" 
-                   class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm">
-                    Ver lista de postulantes
-                </a>
+                <div class="flex gap-2">
+                    <a href="{% url 'lista_postulantes' oferta.id %}" 
+                       class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm">
+                        Ver lista de postulantes
+                    </a>
+                    {% if oferta.activa %}
+                    <a href="{% url 'finalizar_publicacion' oferta.id %}" 
+                       class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition text-sm"
+                       onclick="return confirm('¿Estás seguro de que quieres finalizar esta publicación? Ya no se aceptarán nuevas postulaciones.')">
+                        Finalizar Publicación
+                    </a>
+                    {% else %}
+                    <span class="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm">
+                        Publicación Finalizada
+                    </span>
+                    {% endif %}
+                </div>
 
             </div>
 

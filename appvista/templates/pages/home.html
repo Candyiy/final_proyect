@@ -41,14 +41,18 @@
             </div>
 
             <!-- Noticias -->
+            <h2 class="font-semibold text-lg mb-4">Noticias recientes</h2>          
+             {% for oferta in ofertas %}
             <div class="bg-white rounded-lg shadow p-4">
-                <h2 class="font-semibold text-lg mb-4">Noticias recientes</h2>
+                
                 <ul class="space-y-3 text-sm text-gray-600">
-                    <li class="hover:text-blue-500 cursor-pointer">Django 6.0 ha sido lanzado con nuevas funciones</li>
-                    <li class="hover:text-blue-500 cursor-pointer">TailwindCSS 4.0: nuevas utilidades y mejoras de rendimiento</li>
-                    <li class="hover:text-blue-500 cursor-pointer">Tendencias de trabajo remoto en 2026</li>
+                    <li>
+                        <p class="font-medium">{{ oferta.cargo }} en {{ oferta.empresa }}</p>
+                        <p>{{ oferta.descripcion|truncatechars:100 }}</p>
+                    </li>
                 </ul>
             </div>
+            {% endfor %}
 
         </div>
 
@@ -56,11 +60,14 @@
         <div class="flex-1 space-y-6">
 
             <!-- Bienvenida -->
+             {% if request.user.foto_perfil %}
             <div class="bg-blue-50 rounded-lg p-6 shadow">
-                <h1 class="text-3xl font-bold mb-2">Bienvenido, Juan!</h1>
+
+                <h1 class="text-3xl font-bold mb-2">Bienvenido {{ request.user.nombre }} {{ request.user.apellidos }}</h1>
                 <p class="text-gray-700">Aquí encontrarás las últimas noticias, oportunidades y actualizaciones de tu red.</p>
-                <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Ver mi perfil</button>
+                
             </div>
+            {% endif %}
 
             <!-- Ofertas laborales -->
             {% for oferta in ofertas %}
@@ -76,7 +83,7 @@
                 <div class="flex justify-between items-center">
                     <span class="text-sm text-gray-500">{{ oferta.ubicacion }} · {{ oferta.get_tipo_empleo_display }}</span>
                     <span class="text-sm text-gray-500">{{ oferta.fecha_inicio|date:"d M Y" }} - {{ oferta.fecha_fin|date:"d M Y" }}</span>
-                    <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Postular</a>
+                    <a href="{% url 'postular' oferta.id %}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Postular</a>
                 </div>
             </div>
             {% empty %}

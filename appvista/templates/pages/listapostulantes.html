@@ -1,82 +1,226 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lista de postulantes</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gradient-to-br from-gray-100 to-blue-100 min-h-screen">
 
-<div class="max-w-5xl mx-auto py-10 px-4">
+<div class="max-w-5xl mx-auto py-12 px-4">
 
-<h1 class="text-2xl font-bold mb-6 text-gray-800">
-Lista de postulantes
+<!-- Título -->
+<div class="flex justify-between items-center mb-10">
+
+<h1 class="text-3xl font-bold text-gray-800">
+👥 Lista de postulantes
 </h1>
 
-<div class="space-y-4">
+{% if postulaciones %}
+<span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-semibold">
+{{ postulaciones|length }} postulantes
+</span>
+{% endif %}
 
-<!-- Postulante -->
-<div class="bg-white shadow rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+</div>
+
+
+<div class="space-y-5">
+
+{% if postulaciones %}
+{% for postulacion in postulaciones %}
+
+<!-- Tarjeta postulante -->
+<div class="bg-white shadow-lg hover:shadow-xl transition rounded-xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border border-gray-100">
 
 <div class="flex items-center gap-4">
-<div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-JP
+
+<!-- Avatar -->
+<div class="w-14 h-14 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow">
+{{ postulacion.usuario.nombre|first }}{{ postulacion.usuario.apellidos|first }}
 </div>
 
+<!-- Información -->
 <div>
-<p class="font-semibold">Juan Pérez</p>
-<p class="text-sm text-gray-500">Desarrollador Fullstack</p>
-<p class="text-xs text-gray-400">juan@email.com</p>
-</div>
+
+<p class="font-semibold text-gray-800 text-lg">
+{{ postulacion.usuario.nombre }} {{ postulacion.usuario.apellidos }}
+</p>
+
+<p class="text-blue-600 text-sm font-medium">
+{{ postulacion.oferta.cargo }}
+</p>
+
+<p class="text-gray-500 text-sm">
+{{ postulacion.usuario.email }}
+</p>
+
+<p class="text-xs text-gray-400">
+📅 Postulado: {{ postulacion.fecha|date:"d/m/Y H:i" }}
+</p>
+
 </div>
 
-<div class="flex gap-2">
+</div>
 
-<a href="#" class="bg-gray-200 px-3 py-1 rounded-lg text-sm hover:bg-gray-300">
-Ver CV
+<!-- Botones -->
+<div class="flex gap-2 flex-wrap">
+
+<button data-modal-target="modal-{{ postulacion.id }}" data-modal-toggle="modal-{{ postulacion.id }}"
+class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-200 transition">
+
+👁 Ver Perfil
+</button>
+
+{% if postulacion.status == 'pendiente' %}
+
+<a href="{% url 'aceptar_postulacion' postulacion.id %}"
+class="bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition">
+
+✅ Aceptar
 </a>
 
-<button class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600">
-Aceptar
-</button>
+<a href="{% url 'rechazar_postulacion' postulacion.id %}"
+class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600 transition">
 
-<button class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600">
-Rechazar
-</button>
-
-</div>
-
-</div>
-
-<!-- Postulante -->
-<div class="bg-white shadow rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-MR
-</div>
-
-<div>
-<p class="font-semibold">Maria Rodriguez</p>
-<p class="text-sm text-gray-500">Diseñadora UI/UX</p>
-<p class="text-xs text-gray-400">maria@email.com</p>
-</div>
-</div>
-
-<div class="flex gap-2">
-
-<a href="#" class="bg-gray-200 px-3 py-1 rounded-lg text-sm hover:bg-gray-300">
-Ver CV
+❌ Rechazar
 </a>
 
-<button class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600">
-Aceptar
+{% else %}
+
+<span class="px-4 py-2 rounded-lg text-sm font-medium
+{% if postulacion.status == 'aceptado' %}
+bg-green-100 text-green-700
+{% else %}
+bg-red-100 text-red-700
+{% endif %}">
+
+{{ postulacion.get_status_display }}
+
+</span>
+
+{% endif %}
+
+</div>
+
+</div>
+
+
+<!-- MODAL PERFIL -->
+<div id="modal-{{ postulacion.id }}" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50 p-4">
+
+<div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl">
+
+<!-- header -->
+<div class="flex justify-between items-center border-b p-4">
+
+<h3 class="text-xl font-bold text-gray-800">
+Perfil de {{ postulacion.usuario.nombre }} {{ postulacion.usuario.apellidos }}
+</h3>
+
+<button data-modal-hide="modal-{{ postulacion.id }}"
+class="text-gray-400 hover:text-red-500 text-xl">
+✕
 </button>
 
-<button class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600">
-Rechazar
+</div>
+
+
+<!-- contenido -->
+<div class="p-6 space-y-5 text-gray-700">
+
+<p>
+<strong>Email:</strong> {{ postulacion.usuario.email }}
+</p>
+
+{% if postulacion.usuario.profesion_set.all %}
+<div>
+<strong>Profesiones</strong>
+
+<ul class="list-disc ml-5 text-gray-600">
+{% for prof in postulacion.usuario.profesion_set.all %}
+<li>{{ prof.nombre }}</li>
+{% endfor %}
+</ul>
+
+</div>
+{% endif %}
+
+
+{% if postulacion.usuario.habilidad_set.all %}
+<div>
+
+<strong>Habilidades</strong>
+
+<ul class="list-disc ml-5 text-gray-600">
+{% for hab in postulacion.usuario.habilidad_set.all %}
+<li>{{ hab.nombre }}</li>
+{% endfor %}
+</ul>
+
+</div>
+{% endif %}
+
+
+{% if postulacion.usuario.servicio_set.all %}
+<div>
+
+<strong>Servicios</strong>
+
+<ul class="list-disc ml-5 text-gray-600">
+{% for serv in postulacion.usuario.servicio_set.all %}
+<li>{{ serv.nombre }}</li>
+{% endfor %}
+</ul>
+
+</div>
+{% endif %}
+
+
+{% if postulacion.usuario.experiencia_set.all %}
+<div>
+
+<strong>Experiencia</strong>
+
+<ul class="list-disc ml-5 text-gray-600">
+{% for exp in postulacion.usuario.experiencia_set.all %}
+<li>{{ exp.descripcion }}</li>
+{% endfor %}
+</ul>
+
+</div>
+{% endif %}
+
+
+{% if postulacion.usuario.educacion_set.all %}
+<div>
+
+<strong>Educación</strong>
+
+<ul class="list-disc ml-5 text-gray-600">
+{% for edu in postulacion.usuario.educacion_set.all %}
+<li>{{ edu.titulo }} - {{ edu.institucion }}</li>
+{% endfor %}
+</ul>
+
+</div>
+{% endif %}
+
+</div>
+
+
+<!-- footer -->
+<div class="border-t p-4 flex justify-end">
+
+<button data-modal-hide="modal-{{ postulacion.id }}"
+class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg">
+
+Cerrar
+
 </button>
 
 </div>
@@ -85,7 +229,63 @@ Rechazar
 
 </div>
 
+{% endfor %}
+
+{% else %}
+
+<!-- sin postulantes -->
+<div class="bg-white shadow-lg rounded-xl p-10 text-center">
+
+<p class="text-gray-500 text-lg">
+No hay postulantes aún
+</p>
+
 </div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+const openButtons = document.querySelectorAll("[data-modal-toggle]");
+const closeButtons = document.querySelectorAll("[data-modal-hide]");
+
+openButtons.forEach(btn => {
+
+btn.addEventListener("click", () => {
+
+const modal = document.getElementById(btn.dataset.modalTarget);
+
+modal.classList.remove("hidden");
+modal.classList.add("flex");
+
+});
+
+});
+
+
+closeButtons.forEach(btn => {
+
+btn.addEventListener("click", () => {
+
+const modal = document.getElementById(btn.dataset.modalHide);
+
+modal.classList.add("hidden");
+modal.classList.remove("flex");
+
+});
+
+});
+
+});
+
+</script>
 
 </body>
 </html>

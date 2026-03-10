@@ -1,71 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <title>Publicar Oferta</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gradient-to-br from-blue-100 via-white to-blue-200 min-h-screen flex items-center justify-center">
 
-<div class="max-w-2xl mx-auto mt-10 bg-white shadow-lg rounded-xl p-8">
+<div class="w-full max-w-3xl bg-white shadow-2xl rounded-2xl p-10 border border-gray-100">
 
-<h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+<h2 class="text-3xl font-bold text-center text-gray-800 mb-8">
+<i class="fa-solid fa-briefcase text-blue-500"></i>
 Publicar Oferta de Trabajo
 </h2>
 
-<form method="POST" class="space-y-4">
+<form method="POST" class="space-y-6">
 
 {% csrf_token %}
 
 <div>
-<label class="block text-sm font-medium text-gray-600">Cargo</label>
+<label class="block text-sm font-semibold text-gray-600 mb-1">
+<i class="fa-solid fa-user-tie text-blue-400"></i> Cargo
+</label>
 {{ form.cargo }}
 </div>
 
 <div>
-<label class="block text-sm font-medium text-gray-600">Empresa</label>
+<label class="block text-sm font-semibold text-gray-600 mb-1">
+<i class="fa-solid fa-building text-blue-400"></i> Empresa
+</label>
 {{ form.empresa }}
 </div>
 
 <div>
-<label class="block text-sm font-medium text-gray-600">Ubicación</label>
+<label class="block text-sm font-semibold text-gray-600 mb-1">
+<i class="fa-solid fa-location-dot text-blue-400"></i> Ubicación
+</label>
 {{ form.ubicacion }}
 </div>
 
 <div>
-<label class="block text-sm font-medium text-gray-600">Tipo de empleo</label>
+<label class="block text-sm font-semibold text-gray-600 mb-1">
+<i class="fa-solid fa-clock text-blue-400"></i> Tipo de empleo
+</label>
 {{ form.tipo_empleo }}
 </div>
 
 <div>
-<label class="block text-sm font-medium text-gray-600">Descripción</label>
+<label class="block text-sm font-semibold text-gray-600 mb-1">
+<i class="fa-solid fa-file-lines text-blue-400"></i> Descripción
+</label>
 {{ form.descripcion }}
 </div>
 
 <div>
-<label class="block text-sm font-medium text-gray-600">Aptitudes</label>
+<label class="block text-sm font-semibold text-gray-600 mb-1">
+<i class="fa-solid fa-star text-blue-400"></i> Aptitudes
+</label>
 {{ form.aptitudes }}
 </div>
 
 <div>
-<label class="block text-sm font-medium text-gray-600">Método de solicitud (email)</label>
+<label class="block text-sm font-semibold text-gray-600 mb-1">
+<i class="fa-solid fa-envelope text-blue-400"></i> Método de solicitud (Email)
+</label>
 {{ form.metodo_solicitud }}
 </div>
 
-<div class="grid grid-cols-2 gap-4">
+<div class="grid grid-cols-2 gap-6">
+
 <div>
-<label class="block text-sm font-medium text-gray-600">Fecha de inicio</label>
+<label class="block text-sm font-semibold text-gray-600 mb-1">
+<i class="fa-solid fa-calendar text-blue-400"></i> Fecha de inicio
+</label>
 {{ form.fecha_inicio }}
 </div>
 
 <div>
-<label class="block text-sm font-medium text-gray-600">Fecha de fin</label>
+<label class="block text-sm font-semibold text-gray-600 mb-1">
+<i class="fa-solid fa-calendar-check text-blue-400"></i> Fecha de fin
+</label>
 {{ form.fecha_fin }}
 </div>
+
 </div>
 
-<button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
-Publicar
+<button type="submit" 
+class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-xl font-semibold text-lg hover:scale-105 hover:shadow-lg transition duration-300">
+
+<i class="fa-solid fa-paper-plane"></i> Publicar Oferta
+
 </button>
 
 </form>

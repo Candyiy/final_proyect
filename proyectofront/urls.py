@@ -25,8 +25,13 @@ urlpatterns = [
     path('job/', views.job, name='job'),
     path('mensajes/', views.mensajes, name='mensajes'),
     path('empleos/', include('job.urls')),
-    path('listaPostulantes/', views.listapostulantes, name='lista_postulantes'),
+    path('listaPostulantes/<int:oferta_id>/', views.listapostulantes, name='lista_postulantes'),
     path('usuariolista/', views.usuariolista, name='usuariolista'),
+    path('postular/<int:oferta_id>/', views.postular, name='postular'),
+    path('aceptar_postulacion/<int:postulacion_id>/', views.aceptar_postulacion, name='aceptar_postulacion'),
+    path('rechazar_postulacion/<int:postulacion_id>/', views.rechazar_postulacion, name='rechazar_postulacion'),
+    path('enviar_mensaje/<int:postulacion_id>/', views.enviar_mensaje, name='enviar_mensaje'),
+    path('finalizar_publicacion/<int:oferta_id>/', views.finalizar_publicacion, name='finalizar_publicacion'),
 
     path('', include('usuarios.urls')),
 ]

@@ -6,84 +6,57 @@
   Página de Mensajes
 </h1>
 
-<div class="flex max-w-5xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden h-[500px]">
-
-  <!-- Sidebar de chats -->
-  <div class="w-1/3 bg-gray-50 p-4 overflow-y-auto border-r">
-    <h2 class="text-xl font-semibold mb-4">Chats</h2>
-    <ul class="space-y-3">
-      <li class="p-3 bg-gray-100 rounded hover:bg-blue-100 cursor-pointer transition">
-        <div class="flex justify-between items-center">
-          <span class="font-medium">Chat con Ana</span>
-          <span class="text-sm text-gray-500">10:45 AM</span>
-        </div>
-      </li>
-      <li class="p-3 bg-gray-100 rounded hover:bg-blue-100 cursor-pointer transition">
-        <div class="flex justify-between items-center">
-          <span class="font-medium">Chat con Juan</span>
-          <span class="text-sm text-gray-500">09:30 AM</span>
-        </div>
-      </li>
-      <li class="p-3 bg-gray-100 rounded hover:bg-blue-100 cursor-pointer transition">
-        <div class="flex justify-between items-center">
-          <span class="font-medium">Chat con María</span>
-          <span class="text-sm text-gray-500">ayer</span>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Panel de conversación -->
-  <div class="w-2/3 flex flex-col">
+<div class="max-w-5xl mx-auto space-y-6">
+  {% for conversacion in conversaciones %}
+  <div class="bg-white shadow-lg rounded-lg overflow-hidden">
     <!-- Header -->
     <div class="bg-gray-800 text-white px-4 py-3 flex items-center gap-3">
-      <div class="w-10 h-10 bg-gray-500 rounded-full"></div>
+      <div class="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center text-white font-bold">
+        {{ conversacion.otro_usuario.nombre|first }}{{ conversacion.otro_usuario.apellidos|first }}
+      </div>
       <div>
-        <p class="font-semibold">Juan Perez</p>
-        <p class="text-sm text-gray-300">En línea</p>
+        <p class="font-semibold">{{ conversacion.otro_usuario.nombre }} {{ conversacion.otro_usuario.apellidos }}</p>
+        <p class="text-sm text-gray-300">{{ conversacion.postulacion.oferta.cargo }} - {{ conversacion.postulacion.oferta.empresa }}</p>
+        <p class="text-xs text-gray-400">Postulación aceptada</p>
       </div>
     </div>
 
     <!-- Mensajes -->
-    <div class="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-100">
-      <div class="flex">
-        <div class="bg-white px-4 py-2 rounded-lg shadow max-w-xs">
-          Hola, ¿cómo estás?
+    <div class="h-64 p-4 overflow-y-auto space-y-4 bg-gray-100">
+      {% for mensaje in conversacion.mensajes %}
+      <div class="flex {% if mensaje.remitente == user %}justify-end{% endif %}">
+        <div class="bg-{% if mensaje.remitente == user %}blue-500 text-white{% else %}white{% endif %} px-4 py-2 rounded-lg shadow max-w-xs">
+          <p>{{ mensaje.contenido }}</p>
+          <p class="text-xs {% if mensaje.remitente == user %}text-blue-100{% else %}text-gray-500{% endif %}">{{ mensaje.fecha|date:"d/m/Y H:i" }}</p>
         </div>
       </div>
-
-      <div class="flex justify-end">
-        <div class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow max-w-xs">
-          Bien, todo bien. ¿Y tú?
-        </div>
-      </div>
-
-      <div class="flex">
-        <div class="bg-white px-4 py-2 rounded-lg shadow max-w-xs">
-          Estoy trabajando en un proyecto de Django.
-        </div>
-      </div>
-
-      <div class="flex justify-end">
-        <div class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow max-w-xs">
-          ¡Genial! Yo también estoy practicando.
-        </div>
-      </div>
+      {% empty %}
+      <p class="text-gray-500 text-center">No hay mensajes en esta conversación</p>
+      {% endfor %}
     </div>
 
     <!-- Input -->
     <div class="border-t p-3 flex gap-2">
-      <input 
-        type="text"
-        placeholder="Escribe un mensaje..."
-        class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-      >
-      <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-        Enviar
-      </button>
+      <form method="post" action="{% url 'enviar_mensaje' conversacion.postulacion.id %}" class="flex gap-2 w-full">
+        {% csrf_token %}
+        <input 
+          type="text"
+          name="contenido"
+          placeholder="Escribe un mensaje..."
+          class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          required
+        >
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+          Enviar
+        </button>
+      </form>
     </div>
   </div>
-
+  {% empty %}
+  <div class="bg-white shadow-lg rounded-lg p-8 text-center">
+    <p class="text-gray-500">No hay conversaciones disponibles</p>
+  </div>
+  {% endfor %}
 </div>
 
 {% endblock %}

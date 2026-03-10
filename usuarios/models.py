@@ -25,6 +25,7 @@ class Usuario(AbstractUser):
     )
 
     tipo_usuario = models.CharField(max_length=10, choices=TIPO_USUARIO, default='normal')
+    cv = models.FileField(upload_to='cv/', blank=True, null=True)
 
     def __str__(self):
         return self.username

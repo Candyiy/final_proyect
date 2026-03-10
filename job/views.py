@@ -10,7 +10,9 @@ def crear_oferta(request):
         form = OfertaForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            oferta = form.save(commit=False)
+            oferta.usuario = request.user
+            oferta.save()
             return redirect('lista_ofertas')
 
     else:
@@ -21,6 +23,6 @@ def crear_oferta(request):
 @login_required
 def lista_ofertas(request):
 
-    ofertas = OfertaLaboral.objects.all()
+    ofertas = OfertaLaboral.objects.filter(usuario=request.user)
 
     return render(request, 'pages/job.html', {'ofertas': ofertas})
