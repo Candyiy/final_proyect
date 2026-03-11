@@ -207,7 +207,7 @@ def profile(request):
     })
 
 from django.shortcuts import get_object_or_404
-
+from datetime import datetime
 
 @login_required
 def descargar_cv(request, user_id):
@@ -231,7 +231,8 @@ def descargar_cv(request, user_id):
     html = template.render(context)
     response = HttpResponse(content_type="application/pdf")
 
-    nombre = f"{usuario.first_name}_{usuario.last_name}".replace(" ", "_")
+    anio = datetime.now().year
+    nombre = f"{usuario.nombre}_{usuario.apellidos}_{anio}".replace(" ", "_")
     # Cambiado attachment → inline
     response["Content-Disposition"] = f'inline; filename="CV_{nombre}.pdf"'
 
